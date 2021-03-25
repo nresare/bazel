@@ -66,6 +66,10 @@ public class TestArchiveDescriptor {
   }
 
   DecompressorDescriptor.Builder createDescriptorBuilder() throws IOException {
+    return builderBuilderFromInAndOut(archiveName, outDirName);
+  }
+
+  static DecompressorDescriptor.Builder builderBuilderFromInAndOut(String archiveName, String outDirName) throws IOException {
     FileSystem testFS =
         OS.getCurrent() == OS.WINDOWS
             ? new JavaIoFileSystem(DigestHashFunction.SHA256)

@@ -74,4 +74,24 @@ public class CompressedTarFunctionTest {
       }
     }.decompress(descriptorBuilder.build());
   }
+
+  @Test
+  public void testExtractCaseSensitiveData() throws Exception {
+    // This is a .tar.gz with two files with 444 permissions with names
+    // that only differs with regards to letter case.
+    //
+    // This emulates the effect of creating a .tar.gz of for example
+    // the kernel headers on a linux machine, where certain headers
+    // such as ip6t_HL.h and ip6t_hl.h differs only in case.
+    DecompressorDescriptor.Builder descriptorBuilder = builderBuilderFromInAndOut(
+            "case_sensitive.tar.gz", "out");
+
+    new CompressedTarFunction() {
+      @Override
+      protected InputStream getDecompressorStream(DecompressorDescriptor descriptor)
+              throws IOException {
+        return new GZIPInputStream(new FileInputStream(descriptor.archivePath().getPathFile()));
+      }
+    }.decompress(descriptorBuilder.build());
+  }
 }
