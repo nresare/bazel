@@ -182,4 +182,6 @@ def configure_osx_toolchain(repository_ctx, overriden_tools):
             },
         )
     else:
-        configure_unix_toolchain(repository_ctx, cpu_value = "darwin", overriden_tools = overriden_tools)
+        result = repository_ctx.execute(["uname", "-m"])
+        cpu_value = "darwin" + ("_arm64" if result.stdout.strip() == "arm64" else "")
+        configure_unix_toolchain(repository_ctx, cpu_value = cpu_value, overriden_tools = overriden_tools)
